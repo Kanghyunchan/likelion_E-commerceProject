@@ -5,8 +5,11 @@ import com.myproject.ecommerce_service.domain.product.ProductStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,15 +33,28 @@ public class JdbcProductRepository implements ProductRepository{
     @Override
     public Product registration(Product product) {
         String sql = "INSERT INTO product (product_name, price, quantity, description, imageURL, status) VALUES(?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql,
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"product_id"});
+            ps.setString(1, product.getProductName());
+            ps.setInt(2, product.getPrice());
+            ps.setInt(3, product.getQuantity());
+            ps.setString(4, product.getDescription());
+            ps.setString(5, product.getImageUrl());
+            ps.setString(6, product.getStatus().name());
+            return ps;
+            }, keyHolder);
+        Long generatedId = keyHolder.getKey().longValue();
+        return new Product(
+                generatedId,
                 product.getProductName(),
                 product.getPrice(),
                 product.getQuantity(),
                 product.getDescription(),
                 product.getImageUrl(),
-                product.getStatus().name()
-                );
-        return product;
+                product.getStatus()
+        );
     }
 
     @Override
