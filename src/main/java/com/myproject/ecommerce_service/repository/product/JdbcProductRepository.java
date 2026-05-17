@@ -83,4 +83,10 @@ public class JdbcProductRepository implements ProductRepository{
                 product.getProductId()
         );
     }
+
+    @Override
+    public void updateQuantity(Long productId, int updatedQuantity) {
+        String sql = "UPDATE product SET quantity = ? WHERE product_id = ?";
+        jdbcTemplate.update(sql, updatedQuantity, productId);
+    }
 }
