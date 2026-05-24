@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderCreateRequest {
     private Long userId;
+    private String shippingAddress;
     private List<OrderItemElement> orderItems;
 
     @Getter
