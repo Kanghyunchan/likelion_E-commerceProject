@@ -8,6 +8,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PaymentResponse {
     private Long orderId;
-    private int paidAmount;
-    private OrderStatus status;
+    private int amount;
 }
