@@ -24,4 +24,10 @@ public class CartItem {
             throw new IllegalArgumentException("추가할 수량이 0보다 커야 합니다.");
         this.quantity += quantity;
     }
+
+    public void updateQuantity(int quantity){
+        if(quantity <= 0)
+            throw new IllegalArgumentException("수량은 1개 이상이어야 합니다.");
+        this.quantity = quantity;
+    }
 }
