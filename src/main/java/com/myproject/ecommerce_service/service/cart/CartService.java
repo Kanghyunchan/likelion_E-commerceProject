@@ -66,19 +66,10 @@ public class CartService {
     //장바구니 수량 변경
     @Transactional
     public void updateCartQuantity(Long cartItemId, int quantity){
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("수량은 1개 이상이어야 합니다.");
-        }
-
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new IllegalArgumentException("장바구니 항목이 존재하지 않습니다. ID: " + cartItemId));
-        CartItem updatedItem = new CartItem(
-                cartItem.getCartItemId(),
-                cartItem.getCartId(),
-                cartItem.getProductId(),
-                quantity
-        );
-        cartItemRepository.update(updatedItem);
+        cartItem.updateQuantity(quantity);
+        cartItemRepository.update(cartItem);
     }
 
     @Transactional
