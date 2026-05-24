@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,8 @@ public class OrderService {
     public OrderResponse createOrder(OrderCreateRequest request){
         int totalPrice = 0;
 
+        Map<Long, Product> productMap = new HashMap<>();
+
         for(OrderCreateRequest.OrderItemElement item : request.getOrderItems()){
             Product product = productRepository.findById(item.getProductId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다. ID: " + item.getProductId()));
@@ -38,9 +42,11 @@ public class OrderService {
             }
 
             int updatedQuantity = product.getQuantity() - item.getQuantity();
-            productRepository.updateQuantity(product.getProductId(), item.getQuantity());
+            productRepository.updateQuantity(product.getProductId(), updatedQuantity);
 
             totalPrice += product.getPrice() * item.getQuantity();
+
+            productMap.put(product.getProductId(), product);
         }
         Orders orders = new Orders(
                 null,
@@ -48,15 +54,14 @@ public class OrderService {
                 totalPrice,
                 LocalDateTime.now(),
                 OrderStatus.ORDERED,
-                "충남 두정동"
+                request.getShippingAddress()
         );
 
         Orders registerOrder = orderRepository.registration(orders);
         Long generatedOrderId = registerOrder.getOrderId();
 
         for(OrderCreateRequest.OrderItemElement item : request.getOrderItems()){
-            Product product = productRepository.findById(item.getProductId()).get();
-
+            Product product = productMap.get(item.getProductId());
             OrderItem orderItem = new OrderItem(
                     null,
                     generatedOrderId,
@@ -64,7 +69,6 @@ public class OrderService {
                     item.getQuantity(),
                     product.getPrice()
             );
-
             orderItemRepository.registration(orderItem);
         }
         return new OrderResponse(generatedOrderId, registerOrder.getTotalPrice(), registerOrder.getOrderStatus());
