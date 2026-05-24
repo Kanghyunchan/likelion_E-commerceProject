@@ -7,10 +7,10 @@ import java.util.Optional;
 
 public interface CartItemRepository {
     CartItem registration(CartItem cartItem);
-    Optional<CartItem> findById(Long cartId);
-    List<CartItem> findByUserId(Long userId);
-    Optional<CartItem> findByUserIdAndProductId(Long userId, Long productId); //중복 체크
+    Optional<CartItem> findById(Long cartItemId);
+    List<CartItem> findByCartId(Long cartId);
+    Optional<CartItem> findByCartIdAndProductId(Long cartId, Long productId); //중복 체크
     void update(CartItem cartItem); //수량 변경
-    void delete(Long cartId); //장바구니 상품 제거
-    void clearByUserId(Long userId); //장바구니 비우기
+    void delete(Long cartItemId); //장바구니 상품 제거
+
 }
