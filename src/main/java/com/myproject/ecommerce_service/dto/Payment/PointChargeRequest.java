@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaymentRequest {
-    private Long orderId;
+public class PointChargeRequest {
+    private Long userId;
+    private int chargeAmount;
 }
