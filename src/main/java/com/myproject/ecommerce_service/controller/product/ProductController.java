@@ -3,6 +3,7 @@ package com.myproject.ecommerce_service.controller.product;
 import com.myproject.ecommerce_service.dto.product.ProductDetailResponse;
 import com.myproject.ecommerce_service.dto.product.ProductListResponse;
 import com.myproject.ecommerce_service.dto.product.ProductRegisterRequest;
+import com.myproject.ecommerce_service.dto.product.ProductRegisterResponse;
 import com.myproject.ecommerce_service.service.product.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +21,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
-    @Operation(summary = "상품 전체 목록 조회", description = "메인 화면에 노출할 상품 리스트를 DTO 형태로 조회")
+    @Operation(summary = "상품 전체 목록 조회", description = "메인 화면에 노출되는 상품 리스트를 전부 조회합니다.")
     @GetMapping
     public ResponseEntity<List<ProductListResponse>> getAllProducts() {
         List<ProductListResponse> products = productService.getAllProducts();
@@ -36,8 +37,8 @@ public class ProductController {
 
     @Operation(summary = "상품 등록", description = "새로운 상품 정보를 입력받아 DB에 등록합니다.")
     @PostMapping
-    public ResponseEntity<ProductDetailResponse> registerProduct(@RequestBody ProductRegisterRequest request){
-        ProductDetailResponse response = productService.registerProduct(request);
+    public ResponseEntity<ProductRegisterResponse> registerProduct(@RequestBody ProductRegisterRequest request){
+        ProductRegisterResponse response = productService.registerProduct(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

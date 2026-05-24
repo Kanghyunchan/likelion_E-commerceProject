@@ -4,9 +4,11 @@ import com.myproject.ecommerce_service.domain.product.Product;
 import com.myproject.ecommerce_service.dto.product.ProductDetailResponse;
 import com.myproject.ecommerce_service.dto.product.ProductListResponse;
 import com.myproject.ecommerce_service.dto.product.ProductRegisterRequest;
+import com.myproject.ecommerce_service.dto.product.ProductRegisterResponse;
 import com.myproject.ecommerce_service.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +34,8 @@ public class ProductService {
     }
 
     //상품 등록
-    public ProductDetailResponse registerProduct(ProductRegisterRequest request){
+    @Transactional
+    public ProductRegisterResponse registerProduct(ProductRegisterRequest request){
         Product product = new Product(
                 null,
                 request.getProductName(),
@@ -45,7 +48,12 @@ public class ProductService {
 
         Product registerProduct = productRepository.registration(product);
 
-        return new ProductDetailResponse(registerProduct);
+        return new ProductRegisterResponse(
+                registerProduct.getProductId(),
+                registerProduct.getProductName(),
+                registerProduct.getPrice(),
+                registerProduct.getQuantity()
+        );
     }
 
 }
