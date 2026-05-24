@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
     private final OrderService orderService;
 
-    @Operation(summary = "주문 생성", description = "선택한 상품들의 재고 차감 후 주문 상태를 ORDERED상태로 만듭니다.")
+    @Operation(summary = "주문 생성", description = "사용자가 선택한 상품들로 새로운 주문을 생성합니다. 주문이 완료되면 해당 상품들의 재고가 자동으로 차감됩니다.")
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderCreateRequest request){
         OrderResponse response = orderService.createOrder(request);
